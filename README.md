@@ -2,26 +2,28 @@
 OS program 1 - Implement ps
 
 # Setup
-SSH to the CS Machines 
+1. SSH to the CS Machines 
 ```
 ssh username@best-linux.cs.wisc.edu
 ```
-Mirror the repo
+2. Mirror the repo
 ```
 git clone --mirror https://github.com/JakeDern/os-program-1.git
 ```
-Update with
+3. Update with
 ```
 git remote update
 ```
 
 # Develop
-Clone repo on your local machine
+1. Clone repo on your local machine
 ```
 git clone https://github.com/JakeDern/os-program-1.git
 ```
-Branch before making changes
+2. Branch before making changes
 ```
 git checkout -b <branch name>
 ```
-Stage changes and open a pull request
+3. Stage changes and open a pull request
+4. Merge
+5. ssh to linux machines, perform remote update, compile and run
