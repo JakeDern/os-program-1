@@ -3,7 +3,7 @@ typedef struct ProcessInfo {
   char state;
   char *userTime;
   char *sysTime;
-  int pages;
+  int numPages;
   char *cmdLine;
 } ProcessInfo;
 
