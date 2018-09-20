@@ -1,12 +1,21 @@
-typedef struct ProcessInfo {
+#ifndef _PROCESSFETCHER
+#define _PROCESSFETCHER
+
+typedef struct ProcessNode {
+  Process *Process;
+  ProcessNode *next;
+} ProcessNode;
+
+typedef struct Process {
   int pid;
   char state;
   char *userTime;
   char *sysTime;
   int numPages;
   char *cmdLine;
-} ProcessInfo;
+} Process;
 
-int getProcess(int pid, ProcessInfo *p);
+extern int getProcess(int pid, Process * p);
 
-ProcessInfo * getAllProccesses();
+extern ProcessNode * getAllProccesses();
+#endif

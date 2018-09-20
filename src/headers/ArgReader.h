@@ -1,4 +1,7 @@
-char* errMsg;
+#ifndef _ARGREADER
+#define _ARGREADER
+
+extern char* errMsg;
 
 typedef struct Options {
   int pFlag;
@@ -10,4 +13,5 @@ typedef struct Options {
 } Options;
 
 
-int getOpts(Options *opts, int argc, char **argv);
+extern int getOpts(Options *opts, int argc, char **argv);
+#endif
