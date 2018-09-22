@@ -1,11 +1,6 @@
 #ifndef _PROCESSFETCHER
 #define _PROCESSFETCHER
 
-typedef struct ProcessNode {
-  Process *Process;
-  ProcessNode *next;
-} ProcessNode;
-
 typedef struct Process {
   int pid;
   char state;
@@ -14,6 +9,11 @@ typedef struct Process {
   int numPages;
   char *cmdLine;
 } Process;
+
+typedef struct ProcessNode {
+  Process *Process;
+  struct ProcessNode *next;
+} ProcessNode;
 
 extern Process * getProcess(int pid);
 
