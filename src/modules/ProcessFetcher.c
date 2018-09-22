@@ -5,10 +5,9 @@
 #include <unistd.h>
 
 #define UID getuid()
+static DIR *dirp;
 
 int countFiles();
-
-static DIR *dirp;
 
 int main(int argc, char** argv) {
   printf("%d\n", countFiles());
