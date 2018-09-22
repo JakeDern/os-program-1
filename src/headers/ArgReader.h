@@ -13,5 +13,5 @@ typedef struct Options {
 } Options;
 
 
-extern int getOpts(Options *opts, int argc, char **argv);
+extern Options * getOpts(int argc, char **argv);
 #endif

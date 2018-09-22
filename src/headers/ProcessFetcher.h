@@ -15,7 +15,7 @@ typedef struct Process {
   char *cmdLine;
 } Process;
 
-extern int getProcess(int pid, Process * p);
+extern Process * getProcess(int pid);
 
 extern ProcessNode * getAllProccesses();
 #endif
