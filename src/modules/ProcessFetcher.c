@@ -6,10 +6,12 @@
 
 #define UID getuid()
 
+int countFiles();
+
 static DIR *dirp;
 
 int main(int argc, char** argv) {
-  printf("%d\n", UID);
+  printf("%d\n", countFiles());
   return 0;
 }
 
@@ -23,5 +25,16 @@ ProcessNode * getAllProcesses() {
 }
 
 int countFiles() {
-  return 0;
+  DIR *d = opendir("/proc");
+  struct dirent *curr = malloc(sizeof(struct dirent));
+  int count = 0;
+
+  while ( (curr = readdir(d)) ) {
+    if (atoi(curr->d_name)) {
+      printf("%d\n", atoi(curr->d_name));
+      count++;
+    }
+  }
+
+  return count;
 }
