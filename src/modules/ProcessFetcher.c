@@ -1,9 +1,16 @@
 #include "../headers/ProcessFetcher.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <dirent.h>
+#include <unistd.h>
+
+#define UID getuid()
+
+static DIR *dirp;
 
 int main(int argc, char** argv) {
-  Process *p = getProcess(5);
+  printf("%d\n", UID);
+  return 0;
 }
 
 Process * getProcess(int pid) {
@@ -13,4 +20,8 @@ Process * getProcess(int pid) {
 
 ProcessNode * getAllProcesses() {
   return NULL;
+}
+
+int countFiles() {
+  return 0;
 }
