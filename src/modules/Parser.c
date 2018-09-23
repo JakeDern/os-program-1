@@ -61,7 +61,8 @@ int parseCmd(Process *p, char* path) {
     strcat(buffer, buffer2);
   }
   
+  free(buffer2);
+
   p->cmdLine = buffer;
-  printf("%s\n", (p->cmdLine));
   return 0;
 } 
