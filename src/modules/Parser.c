@@ -58,19 +58,10 @@ int parseCmd(Process *p, char* path) {
   char *buffer2 = malloc(sizeof(char) * 1000);
 
   while(fgets(buffer2, 1000, cmd)) {
-    printf("%s\n", buffer2);
     strcat(buffer, buffer2);
   }
-
-  // for (int i = 0; i < 1000; i++) {
-  //   printf("%c", *(buffer + i));
-  // }
-  // printf("\n");
-
-  // fgets(buffer, 1000, cmd);
-  // sscanf(buffer, "%s", buffer);
-
-  printf("%s\n", buffer);
-  printf("%d\n", cmd == NULL);
+  
+  p->cmdLine = buffer;
+  printf("%s\n", (p->cmdLine));
   return 0;
 } 
