@@ -6,6 +6,10 @@
 #include <stdio.h>
 
 #define PID_LENGTH 5
+#define BIG_NUM 15
+#define STATE_INDEX 3
+#define UTIME_INDEX 14
+#define STIME_INDEX 15
 
 int parseStat(Process *p, char *path);
 int parseStatM(Process *p, char *path);
@@ -37,14 +41,48 @@ Process * parseInfo(int pid) {
   strcat(cmdPath, "/cmdline");
 
   Process *ret = malloc(sizeof(Process));
-  
+  ret->pid = pid;
+
   parseCmd(ret, cmdPath);
+  parseStat(ret, statPath);
+
+  printf("%d\n", ret->pid);
+  printf("%c\n", ret->state);
+  printf("%s\n", ret->sysTime);
+  fflush(stdout);
+  printf("%s\n", ret->userTime);
+    
 
   return NULL;
 }
 
 int parseStat(Process *p, char* path) {
   FILE *stat = fopen(path, "r");
+  char *curr = malloc(sizeof(char) * BIG_NUM);
+  char *lineBuff= malloc(sizeof(char) * 1000);
+  fgets(lineBuff, 1000, stat);
+  
+  for ( int i = 1; i <= 15; i++) {
+    sscanf(lineBuff, "%s", curr);
+    lineBuff += strlen(curr) + 1;
+    switch(i) {
+      case STATE_INDEX: {
+        p->state = *curr;
+        break;
+      }
+      case UTIME_INDEX: {
+        p->userTime = malloc(sizeof(curr));
+        strcpy(p->userTime, curr);
+        break;
+      }
+      case STIME_INDEX: {
+        p->sysTime = malloc(sizeof(curr));
+        strcpy(p->sysTime, curr);
+        break;
+      }
+    }
+  }
+
   return 0;
 } 
 
@@ -61,7 +99,7 @@ int parseCmd(Process *p, char* path) {
     strcat(buffer, buffer2);
   }
   
-  free(buffer2);
+  // free(buffer2);
 
   p->cmdLine = buffer;
   return 0;
