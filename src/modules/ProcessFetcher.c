@@ -3,19 +3,33 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <string.h>
+#include <strings.h>
 
 #define UID getuid()
-static DIR *dirp;
+#define COPY_BUFFER 50
+#define PATH_LENGTH 15
+static DIR *dirp = NULL;
 
 int countFiles();
+int fileOwned(int pid);
+char * buildPath(int pid);
 
 int main(int argc, char** argv) {
-  printf("%d\n", countFiles());
+  getProcess(1447);
   return 0;
 }
 
 Process * getProcess(int pid) {
   Process *p = malloc(sizeof(struct Process));
+  char *fileName = buildPath(pid);
+
+  if(fileOwned(pid)) {
+    printf("yes\n");
+  } else {
+    printf("no\n");
+  }
+
   return p;
 }
 
@@ -23,12 +37,51 @@ ProcessNode * getAllProcesses() {
   return NULL;
 }
 
+int fileOwned(int pid) {
+  char *path = buildPath(pid);
+  char *status = "/status";
+  char *statusPath = malloc(sizeof(char) * COPY_BUFFER);
+  statusPath = strcat(path, status);
+
+  FILE *fptr = fopen(statusPath, "r");
+  
+  char *line = malloc(sizeof(char) * COPY_BUFFER);
+
+  for (int i = 0 ; i < 10; i++) {
+    fgets(line, COPY_BUFFER, fptr);
+  }
+
+  int owner = 0;
+  sscanf(line, "%s %d", path, &owner);
+
+  printf("%d\n", owner);
+
+  if(owner == UID) {
+    return 1;
+  } else {
+    return 0;
+  }
+
+}
+
+char * buildPath(int pid) {
+  char strID[COPY_BUFFER];
+  sprintf(strID, "%d", pid);
+  char base[] = "/proc/";
+  char *fileName = malloc(sizeof(char) * PATH_LENGTH);
+  
+  strcpy(fileName, strcat(base, strID));
+  printf("%s\n", fileName);
+
+  return fileName;
+}
+
 int countFiles() {
   DIR *d = opendir("/proc");
   struct dirent *curr = malloc(sizeof(struct dirent));
   int count = 0;
 
-  while ( (curr = readdir(d)) ) {
+  while ((curr = readdir(d))) {
     if (atoi(curr->d_name)) {
       printf("%d\n", atoi(curr->d_name));
       count++;
