@@ -38,29 +38,32 @@ ProcessNode * getAllProcesses() {
 }
 
 int fileOwned(int pid) {
+  // construct path to status file
   char *path = buildPath(pid);
   char *status = "/status";
   char *statusPath = malloc(sizeof(char) * COPY_BUFFER);
   statusPath = strcat(path, status);
 
+  // open file and create container for lines
   FILE *fptr = fopen(statusPath, "r");
-  
   char *line = malloc(sizeof(char) * COPY_BUFFER);
 
+  //traverse to line containing owner id
   for (int i = 0 ; i < 10; i++) {
     fgets(line, COPY_BUFFER, fptr);
   }
 
+  //parse owner id
   int owner = 0;
   sscanf(line, "%s %d", path, &owner);
 
   printf("%d\n", owner);
 
-  if(owner == UID) {
-    return 1;
-  } else {
-    return 0;
-  }
+  // free memory
+  free(statusPath);
+  free(line);
+
+  return owner == UID;
 
 }
 
