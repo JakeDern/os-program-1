@@ -40,31 +40,42 @@ Process * parseInfo(int pid) {
   strcat(statMPath, "/statm");
   strcat(cmdPath, "/cmdline");
 
+  // create return struct
   Process *ret = malloc(sizeof(Process));
   ret->pid = pid;
 
+  // parse needed info
   parseCmd(ret, cmdPath);
   parseStat(ret, statPath);
+  parseStatM(ret, statMPath);
+
+  // free mem
+  free(statPath);
+  free(statMPath);
+  free(cmdPath);
+  free(base);
 
   printf("%d\n", ret->pid);
   printf("%c\n", ret->state);
   printf("%s\n", ret->sysTime);
-  fflush(stdout);
   printf("%s\n", ret->userTime);
-    
+  printf("%s\n", ret->numPages);
 
-  return NULL;
+  return ret;
 }
 
 int parseStat(Process *p, char* path) {
+  // set up buffer and file
   FILE *stat = fopen(path, "r");
   char *curr = malloc(sizeof(char) * BIG_NUM);
-  char *lineBuff= malloc(sizeof(char) * 1000);
+  char *lineBuff = malloc(sizeof(char) * 1000);
   fgets(lineBuff, 1000, stat);
-  
+
+  // traverse file, pulling out relevant information
+  char *currPos = lineBuff;
   for ( int i = 1; i <= 15; i++) {
-    sscanf(lineBuff, "%s", curr);
-    lineBuff += strlen(curr) + 1;
+    sscanf(currPos, "%s", curr);
+    currPos += strlen(curr) + 1;
     switch(i) {
       case STATE_INDEX: {
         p->state = *curr;
@@ -83,10 +94,33 @@ int parseStat(Process *p, char* path) {
     }
   }
 
+  // free mem and close resources
+  free(curr);
+  free(lineBuff);
+  fclose(stat);
+
   return 0;
 } 
 
 int parseStatM(Process *p, char* path) {
+  // set up buffer and file
+  FILE *statM = fopen(path, "r");
+  char *buffer = malloc(sizeof(char) * 1000);
+  fgets(buffer, 1000, statM);
+  char *size = malloc(sizeof(char) * BIG_NUM);
+
+  // scan first line from file
+  sscanf(buffer, "%s", size);
+
+  // record size
+  p->numPages = malloc(sizeof(size));
+  strcpy(p->numPages, size);
+
+  // free mem and close resources
+  free(size);
+  free(buffer);
+  fclose(statM);
+
   return 0;
 } 
 
@@ -99,8 +133,11 @@ int parseCmd(Process *p, char* path) {
     strcat(buffer, buffer2);
   }
   
-  // free(buffer2);
+  p->cmdLine = malloc(sizeof(buffer));
+  strcpy(p->cmdLine, buffer);
 
-  p->cmdLine = buffer;
+  fclose(cmd);
+  free(buffer);
+
   return 0;
 } 

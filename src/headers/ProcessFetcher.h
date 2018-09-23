@@ -6,7 +6,7 @@ typedef struct Process {
   char state;
   char *userTime;
   char *sysTime;
-  int numPages;
+  char *numPages;
   char *cmdLine;
 } Process;
 
