@@ -13,14 +13,14 @@
 
 char* errMsg;
 
-int main(int argc, char **argv) {
+// int main(int argc, char **argv) {
 
-getOpts(argc, argv);
+// getOpts(argc, argv);
 
 
-return 0;
+// return 0;
 
-}
+// }
 
 Options * getOpts(int argc, char **argv) {
 

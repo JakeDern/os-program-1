@@ -15,10 +15,10 @@ int countFiles();
 int fileOwned(int pid);
 char * buildPath(int pid);
 
-int main(int argc, char** argv) {
-  getProcess(1447);
-  return 0;
-}
+// int main(int argc, char** argv) {
+//   getProcess(1447);
+//   return 0;
+// }
 
 Process * getProcess(int pid) {
   Process *p = malloc(sizeof(struct Process));
@@ -29,6 +29,8 @@ Process * getProcess(int pid) {
   } else {
     printf("no\n");
   }
+
+  p = parseInfo(pid);
 
   return p;
 }

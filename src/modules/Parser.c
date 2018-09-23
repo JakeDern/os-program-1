@@ -15,9 +15,9 @@ int parseStat(Process *p, char *path);
 int parseStatM(Process *p, char *path);
 int parseCmd(Process *p, char *path);
 
-int main(int argc, char **argv) {
-  parseInfo(4215);
-}
+// int main(int argc, char **argv) {
+//   parseInfo(4215);
+// }
 
 Process * parseInfo(int pid) {
   // construct base file path for needed files
