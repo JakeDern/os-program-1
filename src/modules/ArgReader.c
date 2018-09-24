@@ -84,7 +84,6 @@ Options * getOpts(int argc, char **argv) {
           errMsg = DUPLICATE_FLAG_ERROR;
           return NULL;
         }
-        printf("bet i die here\n");
         break;
       }
       case 'U': {
@@ -191,7 +190,6 @@ Options * getOpts(int argc, char **argv) {
         return NULL;
       }
       default: {
-        printf("sugah we going down\n");
         return NULL;
       }
     }
