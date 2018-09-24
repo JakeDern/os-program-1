@@ -36,6 +36,20 @@ Process * getProcess(int pid) {
 }
 
 ProcessNode * getAllProcesses() {
+  // if directory iteration not in progess, open new one
+  if (!dirp) {
+    dirp = opendir("/proc");
+  }
+  struct dirent *currDirectory = malloc(sizeof(struct dirent));
+
+  // read one more file if available
+  if (currDirectory = readdir(dirp)) {
+    if (atoi(currDirectory->d_name)) {
+      Process *nextProcess = parseInfo(currDirectory->d_name);
+      return nextProcess;
+    }
+  }
+
   return NULL;
 }
 
