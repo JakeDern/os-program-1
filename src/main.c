@@ -9,9 +9,9 @@
 void freeProcess(Process *p);
 
 int main(int argc, char **argv) {
-  Process *p = getProcess(4215);
-  printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
-    p->pid, p->state, p->sysTime, p->userTime, p->numPages);
+  Process *p;// = getProcess(4215);
+  // printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
+  //   p->pid, p->state, p->sysTime, p->userTime, p->numPages);
 
   while((p = getAllProcesses())) {
     printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
