@@ -195,9 +195,6 @@ Options * getOpts(int argc, char **argv) {
     }
   }
 
-  printf("%d %d %d %d %d %d\n", opts->pFlag, opts-> sFlag, opts->UFlag, opts->SFlag, opts->vFlag, opts->cFlag);
-
-
   if (expectedArgs + 1 != argc) {
     printf("invalid arguments\n");
     errMsg = COMMAND_FORMAT_ERROR;

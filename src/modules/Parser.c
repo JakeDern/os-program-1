@@ -55,12 +55,6 @@ Process * parseInfo(int pid) {
   free(cmdPath);
   free(base);
 
-  printf("%d\n", ret->pid);
-  printf("%c\n", ret->state);
-  printf("%s\n", ret->sysTime);
-  printf("%s\n", ret->userTime);
-  printf("%s\n", ret->numPages);
-
   return ret;
 }
 

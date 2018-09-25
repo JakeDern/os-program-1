@@ -23,13 +23,7 @@ char * buildPath(int pid);
 Process * getProcess(int pid) {
   Process *p = malloc(sizeof(struct Process));
   char *fileName = buildPath(pid);
-
-  if(fileOwned(pid)) {
-    printf("yes\n");
-  } else {
-    printf("no\n");
-  }
-
+  
   p = parseInfo(pid);
 
   return p;
@@ -73,8 +67,6 @@ int fileOwned(int pid) {
   int owner = 0;
   sscanf(line, "%s %d", path, &owner);
 
-  printf("%d\n", owner);
-
   // free memory
   free(statusPath);
   free(line);
@@ -90,7 +82,6 @@ char * buildPath(int pid) {
   char *fileName = malloc(sizeof(char) * PATH_LENGTH);
   
   strcpy(fileName, strcat(base, strID));
-  printf("%s\n", fileName);
 
   return fileName;
 }

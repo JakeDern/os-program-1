@@ -7,7 +7,11 @@
 #include <stdio.h>
 
 int main(int argc, char **argv) {
-  printf("I compiled\n");
   Process *p = getProcess(2029);
-  printf("%d\n", p->pid);
+  printf("pid: %d\n", p->pid);
+  printf("cmd: %s\n", p->cmdLine);
+  printf("state: %c\n", p->state);
+  printf("sysTime: %s\n", p->sysTime);
+  printf("userTime: %s\n", p->userTime);
+  printf("numPages: %s\n", p->numPages);
 }

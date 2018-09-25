@@ -19,3 +19,5 @@ Parser.o:
 
 clean:
 	rm $(EXE) *.o
+	rm ./headers/*.gch
+	rm ./modules/*.exe
