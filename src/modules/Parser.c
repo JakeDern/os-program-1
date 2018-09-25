@@ -131,7 +131,6 @@ int parseCmd(Process *p, char* path) {
   strcpy(p->cmdLine, buffer);
 
   fclose(cmd);
-  free(buffer);
-
+  //free(buffer);
   return 0;
 } 

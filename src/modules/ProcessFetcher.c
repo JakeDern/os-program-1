@@ -1,4 +1,5 @@
 #include "../headers/ProcessFetcher.h"
+#include "../headers/Parser.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <dirent.h>
@@ -22,14 +23,12 @@ char * buildPath(int pid);
 
 Process * getProcess(int pid) {
   Process *p = malloc(sizeof(struct Process));
-  char *fileName = buildPath(pid);
-  
   p = parseInfo(pid);
 
   return p;
 }
 
-ProcessNode * getAllProcesses() {
+Process * getAllProcesses() {
   // if directory iteration not in progess, open new one
   if (!dirp) {
     dirp = opendir("/proc");
@@ -37,9 +36,9 @@ ProcessNode * getAllProcesses() {
   struct dirent *currDirectory = malloc(sizeof(struct dirent));
 
   // read one more file if available
-  if (currDirectory = readdir(dirp)) {
+  if ((currDirectory = readdir(dirp))) {
     if (atoi(currDirectory->d_name)) {
-      Process *nextProcess = parseInfo(currDirectory->d_name);
+      Process *nextProcess = parseInfo(atoi(currDirectory->d_name));
       return nextProcess;
     }
   }
@@ -71,7 +70,7 @@ int fileOwned(int pid) {
   free(statusPath);
   free(line);
 
-  return owner == UID;
+  return ((uint) owner) == UID;
 
 }
 
