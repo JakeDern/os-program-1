@@ -72,7 +72,11 @@ int fileOwned(int pid) {
 
   // open file and create container for lines
   printf("opening file: %s\n", statusPath);
-  FILE *fptr = fopen(statusPath, "r");
+  FILE *fptr;
+
+  if ((fptr = fopen(statusPath, "r")) == NULL) {
+    return NULL;
+  }
   //TODO fix this buffer
   char *line = malloc(sizeof(char) * 1000);
 
