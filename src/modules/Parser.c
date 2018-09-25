@@ -171,5 +171,8 @@ void freeFields(Process *p) {
   if(p->cmdLine) {
     free(p->cmdLine);
   }
+  if(p->numPages) {
+    free(p->numPages);
+  }
   free(p);
 }
