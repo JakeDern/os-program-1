@@ -55,6 +55,8 @@ Process * parseInfo(int pid) {
   free(cmdPath);
   free(base);
 
+  // printf("command line: %s\n", ret->cmdLine);
+
   return ret;
 }
 
@@ -122,15 +124,18 @@ int parseCmd(Process *p, char* path) {
   FILE *cmd = fopen(path, "r");
   char *buffer = malloc(sizeof(char) * 1000);
   char *buffer2 = malloc(sizeof(char) * 1000);
+  printf("buffer size after malloc: %lu\n", sizeof(buffer));
 
   while(fgets(buffer2, 1000, cmd)) {
     strcat(buffer, buffer2);
   }
   
-  p->cmdLine = malloc(sizeof(buffer));
+  p->cmdLine = malloc(sizeof(char) * 1000);
   strcpy(p->cmdLine, buffer);
 
   fclose(cmd);
   //free(buffer);
+  printf("buffer size when done: %lu\n", sizeof(buffer));
+  printf("struct cmd size: %lu\n", sizeof(p->cmdLine));
   return 0;
 } 
