@@ -49,8 +49,11 @@ Process * getAllProcesses() {
   }
 
   if (currDirectory) {
-    //printf("TEST: %s\n", currDirectory->d_name);
+    printf("parsing: %s\n", currDirectory->d_name);
     Process *p = parseInfo(atoi(currDirectory->d_name));
+    if (!p) {
+      return NULL;
+    } 
     printf("finished parsing %d\n", atoi(currDirectory->d_name));
     //free(currDirectory);
     return p;

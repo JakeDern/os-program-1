@@ -6,6 +6,8 @@
 #include <strings.h>
 #include <stdio.h>
 
+void freeProcess(Process *p);
+
 int main(int argc, char **argv) {
   Process *p = getProcess(4215);
   printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
@@ -14,7 +16,7 @@ int main(int argc, char **argv) {
   while((p = getAllProcesses())) {
     printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
     p->pid, p->state, p->sysTime, p->userTime, p->numPages);
-    free(p);
+    freeProcess(p);
   }
     // printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
     // p->pid, p->state, p->sysTime, p->userTime, p->numPages);
@@ -23,4 +25,11 @@ int main(int argc, char **argv) {
   // printf("sysTime: %s\n", p->sysTime);
   // printf("userTime: %s\n", p->userTime);
   // printf("numPages: %s\n", p->numPages);
+}
+
+void freeProcess(Process *p) {
+  free(p->sysTime);
+  free(p->userTime);
+  free(p->cmdLine);
+  free(p);
 }

@@ -46,6 +46,7 @@ Process * parseInfo(int pid) {
 
   // parse needed info
   if (parseCmd(ret, cmdPath) || parseStat(ret, statPath) || parseStatM(ret, statMPath)) {
+    printf("parsing failed: %d\n", pid);
     return NULL;  
   }
 
@@ -86,12 +87,12 @@ int parseStat(Process *p, char* path) {
         break;
       }
       case UTIME_INDEX: {
-        p->userTime = malloc(sizeof(curr));
+        p->userTime = malloc(BIG_NUM);
         strcpy(p->userTime, curr);
         break;
       }
       case STIME_INDEX: {
-        p->sysTime = malloc(sizeof(curr));
+        p->sysTime = malloc(BIG_NUM);
         strcpy(p->sysTime, curr);
         break;
       }
