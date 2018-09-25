@@ -64,8 +64,8 @@ Options * getOpts(int argc, char **argv) {
             return NULL;
           }
           expectedArgs++;
-          break;
        }
+       break;
       }
       case 's': {
         if (opts->sFlag == -1) {
@@ -202,7 +202,6 @@ Options * getOpts(int argc, char **argv) {
   }
 
   if (expectedArgs + 1 != argc) {
-    printf("invalid arguments\n");
     errMsg = COMMAND_FORMAT_ERROR;
     return NULL;
   }
