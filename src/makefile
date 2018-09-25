@@ -19,4 +19,3 @@ Parser.o:
 
 clean:
 	rm $(EXE) *.o
-	rm ./modules/fetcher ./modules/parser ./modules/ArgReader
