@@ -48,7 +48,7 @@ Process * parseInfo(int pid) {
     ret->sysTime = NULL;
     ret->cmdLine = NULL;
     ret->numPages = NULL;
-  ret->pid = pid;
+    ret->pid = pid;
 
   // parse needed info
   if (parseCmd(ret, cmdPath) || parseStat(ret, statPath) || parseStatM(ret, statMPath)) {

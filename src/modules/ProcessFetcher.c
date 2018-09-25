@@ -22,7 +22,10 @@ char * buildPath(int pid);
 // }
 
 Process * getProcess(int pid) {
-  return parseInfo(pid);
+  if (fileOwned(pid)) {
+    return parseInfo(pid);
+  }
+  return NULL;
 }
 
 Process * getAllProcesses() {
@@ -46,7 +49,7 @@ Process * getAllProcesses() {
 
   if (currDirectory) {
     printf("parsing: %s\n", currDirectory->d_name);
-    Process *p = getProcess(atoi(currDirectory->d_name));
+    Process *p = parseInfo(atoi(currDirectory->d_name));
     if (!p) {
       return NULL;
     } 
