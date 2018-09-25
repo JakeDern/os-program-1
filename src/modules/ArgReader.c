@@ -6,10 +6,17 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#define USAGE_ERROR "Usage error: valid arguments are -p | -s(-) | -U(-) | -S(-) | -v(-) | -c(-)"
+#define USAGE_ERROR "Usage error: valid arguments are -p <pid> | -s(-) | -U(-) | -S(-) | -v(-) | -c(-) in any order, each used only once"
 #define COMMAND_FORMAT_ERROR "Command format error: all command line arguments must be prefaced with a '-'"
 #define DUPLICATE_FLAG_ERROR "Duplicate argument error: duplicate arguments are not valid input"
 #define BAD_PID_INPUT_ERROR "Bad pid input error: pid must be a natural number below 32768"
+#define DEFUALT_sFLAG 0
+#define DEFUALT_UFLAG 1
+#define DEFAULT_SFLAG 0
+#define DEFAULT_vFLAG 0
+#define DEFAULT_cFLAG 1
+
+
 
 char* errMsg;
 
@@ -29,12 +36,12 @@ Options * getOpts(int argc, char **argv) {
   char command;
 
   Options *opts = malloc(sizeof(Options));
-    opts->pFlag = 2;
-    opts->sFlag = 2;
-    opts->UFlag = 2;
-    opts->SFlag = 2;
-    opts->vFlag = 2;
-    opts->cFlag = 2;
+    opts->pFlag = -1;
+    opts->sFlag = -1;
+    opts->UFlag = -1;
+    opts->SFlag = -1;
+    opts->vFlag = -1;
+    opts->cFlag = -1;
 
 
 
@@ -43,26 +50,25 @@ Options * getOpts(int argc, char **argv) {
     expectedArgs++;
     switch (command) {
       case 'p': {
-        if (atoi(optarg)) {
-          opts->pFlag = atoi(optarg);
-          if (opts->pFlag < 0) {
-            errMsg = BAD_PID_INPUT_ERROR;
+        if (opts->pFlag == -1) {
+          if (atoi(optarg)) {
+            opts->pFlag = atoi(optarg);
+            if (opts->pFlag < 0) {
+              errMsg = BAD_PID_INPUT_ERROR;
+              return NULL;
+            }
+          } else if (*optarg == '0') {
+            opts->pFlag = 0;
+          } else {
+            errMsg = BAD_PID_INPUT_ERROR; 
             return NULL;
           }
-        }
-        else if (*optarg == '0') {
-          opts->pFlag = 0;
-        }
-        else {
-          errMsg = BAD_PID_INPUT_ERROR; 
-          return NULL;
-        }
-        expectedArgs++;
-        break;
+          expectedArgs++;
+          break;
+       }
       }
       case 's': {
-        printf("made to -s\n");
-        if (opts->sFlag == 2) {
+        if (opts->sFlag == -1) {
            if (optarg) {
              if (*optarg == '-') {
                //-s- case
@@ -87,7 +93,7 @@ Options * getOpts(int argc, char **argv) {
         break;
       }
       case 'U': {
-        if (opts->UFlag == 2) {
+        if (opts->UFlag == -1) {
            if (optarg) {
              if (*optarg == '-') {
                //-s- case
@@ -111,7 +117,7 @@ Options * getOpts(int argc, char **argv) {
         break;
       }
       case 'S': {
-        if (opts->SFlag == 2) {
+        if (opts->SFlag == -1) {
            if (optarg) {
              if (*optarg == '-') {
                //-s- case
@@ -135,7 +141,7 @@ Options * getOpts(int argc, char **argv) {
         break;
       }
       case 'v': {
-        if (opts->vFlag == 2) {
+        if (opts->vFlag == -1) {
            if (optarg) {
              if (*optarg == '-') {
                //-s- case
@@ -160,7 +166,7 @@ Options * getOpts(int argc, char **argv) {
         break;
       }
       case 'c': {
-       if (opts->cFlag == 2) {
+       if (opts->cFlag == -1) {
            if (optarg) {
              if (*optarg == '-') {
                //-s- case
@@ -201,6 +207,11 @@ Options * getOpts(int argc, char **argv) {
     return NULL;
   }
 
+  if(opts->sFlag == -1) opts->sFlag = DEFUALT_sFLAG;
+  if(opts->UFlag == -1) opts->UFlag = DEFUALT_UFLAG;
+  if(opts->SFlag == -1) opts->SFlag = DEFAULT_SFLAG;
+  if(opts->vFlag == -1) opts->vFlag = DEFAULT_vFLAG;
+  if(opts->cFlag == -1) opts->cFlag = DEFAULT_cFLAG;
 
 return opts;
 

@@ -31,39 +31,39 @@ Process * getProcess(int pid) {
 Process * getAllProcesses() {
   // if directory iteration not in progess, open new one
   if (!dirp) {
-    printf("init success\n");
+    // printf("init success\n");
     dirp = opendir("/proc");
   }
   struct dirent *currDirectory;
 
   // read one more file if available
-  printf("searching for next file\n");
+  // printf("searching for next file\n");
   while((currDirectory = readdir(dirp))) {
     if (atoi(currDirectory->d_name)) {
       if(fileOwned(atoi(currDirectory->d_name))) {
-         printf("found next: %s\n", currDirectory->d_name);
+         // printf("found next: %s\n", currDirectory->d_name);
          break;
       }
     }
   }
 
   if (currDirectory) {
-    printf("parsing: %s\n", currDirectory->d_name);
+    // printf("parsing: %s\n", currDirectory->d_name);
     Process *p = parseInfo(atoi(currDirectory->d_name));
     if (!p) {
       return NULL;
     } 
-    printf("finished parsing %d\n", atoi(currDirectory->d_name));
+    // printf("finished parsing %d\n", atoi(currDirectory->d_name));
     return p;
   }
 
   closedir(dirp);
-  printf("last file found\n");
+  // printf("last file found\n");
   return NULL;
 }
 
 int fileOwned(int pid) {
-  printf("checking ownership: %d\n", pid);
+  // printf("checking ownership: %d\n", pid);
   // construct path to status file
   char *path = buildPath(pid);
   char *status = "/status";
@@ -71,7 +71,7 @@ int fileOwned(int pid) {
   statusPath = strcpy(statusPath, strcat(path, status));
 
   // open file and create container for lines
-  printf("opening file: %s\n", statusPath);
+  // printf("opening file: %s\n", statusPath);
   FILE *fptr;
 
   if ((fptr = fopen(statusPath, "r")) == NULL) {
@@ -82,24 +82,24 @@ int fileOwned(int pid) {
   char *line = malloc(sizeof(char) * 1000);
 
   //traverse to line containing owner id
-  printf("traversing to location\n");
+  // printf("traversing to location\n");
   for (int i = 0 ; i < 10; i++) {
     fgets(line, 1000, fptr);
   }
 
   //parse owner id
-  printf("scanning file\n");
+  // printf("scanning file\n");
   int owner = 0;
   sscanf(line, "%s %d", path, &owner);
 
   // free memory
-  printf("freeing mem\n");
+  // printf("freeing mem\n");
   free(statusPath);
   free(line);
   free(path);
   fclose(fptr);
 
-  printf("finished ownership check: %d\n", pid);
+  // printf("finished ownership check: %d\n", pid);
   return ((uint) owner) == UID;
 
 }
@@ -117,6 +117,7 @@ char * buildPath(int pid) {
   return fileName;
 }
 
+// TODO delete this ffunc
 int countFiles() {
   DIR *d = opendir("/proc");
   struct dirent *curr = malloc(sizeof(struct dirent));
