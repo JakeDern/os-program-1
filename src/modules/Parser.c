@@ -14,6 +14,7 @@
 int parseStat(Process *p, char *path);
 int parseStatM(Process *p, char *path);
 int parseCmd(Process *p, char *path);
+void freeFields(Process *p);
 
 // int main(int argc, char **argv) {
 //   parseInfo(4215);
@@ -47,7 +48,7 @@ Process * parseInfo(int pid) {
   // parse needed info
   if (parseCmd(ret, cmdPath) || parseStat(ret, statPath) || parseStatM(ret, statMPath)) {
     printf("PARSING FAILED: %d\n", pid);
-    free(ret);
+    freeFields(ret);
     return NULL;  
   }
 
@@ -159,3 +160,16 @@ int parseCmd(Process *p, char* path) {
   // printf("struct cmd size: %lu\n", sizeof(p->cmdLine));
   return 0;
 } 
+
+void freeFields(Process *p) {
+  if(p->userTime) {
+    free(p->userTime);
+  }
+  if(p->sysTime) {
+    free(p->sysTime);
+  }
+  if(p->cmdLine) {
+    free(p->cmdLine);
+  }
+  free(p);
+}

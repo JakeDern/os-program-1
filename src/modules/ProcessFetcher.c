@@ -55,10 +55,10 @@ Process * getAllProcesses() {
     } 
     printf("finished parsing %d\n", atoi(currDirectory->d_name));
     //free(currDirectory);
-    closedir(dirp);
     return p;
   }
 
+  closedir(dirp);
   printf("last file found\n");
   return NULL;
 }
