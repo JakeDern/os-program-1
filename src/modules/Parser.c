@@ -139,19 +139,21 @@ int parseCmd(Process *p, char* path) {
     return 1;
   }
 
-  char *buffer = malloc(sizeof(char) * 1000);
-  char *buffer2 = malloc(sizeof(char) * 1000);
+  //TODO fix these to use constants
+  char *buffer = malloc(1000);
+  char *buffer2 = malloc(1000);
   // printf("buffer size after malloc: %lu\n", sizeof(buffer));
 
-  while(fgets(buffer2, 1000, cmd)) {
-    strcat(buffer, buffer2);
+  while((buffer2 = fgets(buffer2, 1000, cmd))) {
+    buffer = strcat(buffer, buffer2);
   }
   
   p->cmdLine = malloc(sizeof(char) * 1000);
   strcpy(p->cmdLine, buffer);
 
   fclose(cmd);
-  //free(buffer);
+  free(buffer);
+  free(buffer2);
   // printf("buffer size when done: %lu\n", sizeof(buffer));
   // printf("struct cmd size: %lu\n", sizeof(p->cmdLine));
   return 0;
