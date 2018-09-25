@@ -121,9 +121,9 @@ int parseStatM(Process *p, char* path) {
     return 1;
   }
 
-  char *buffer = malloc(sizeof(char) * 1000);
+  char *buffer = malloc(1000);
   fgets(buffer, 1000, statM);
-  char *size = malloc(sizeof(char) * BIG_NUM);
+  char *size = malloc(BIG_NUM + 1);
 
   // scan first line from file
   sscanf(buffer, "%s", size);
