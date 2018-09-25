@@ -10,6 +10,7 @@
 #define UID getuid()
 #define COPY_BUFFER 50
 #define PATH_LENGTH 15
+#define PID_LENGTH 6
 static DIR *dirp = NULL;
 
 int countFiles();
@@ -106,15 +107,16 @@ int fileOwned(int pid) {
 
 char * buildPath(int pid) {
   //TODO figure out if this needs to be freed
-  char strID[COPY_BUFFER];
+  char strID[PID_LENGTH];
   sprintf(strID, "%d", pid);
-  char base[] = "/proc/";
-  char *fileName = malloc(sizeof(char) * PATH_LENGTH);
-  
-  strcpy(fileName, strcat(base, strID));
-  // free(strID);
+  char fileName[COPY_BUFFER];
 
-  return fileName;
+  strcpy(fileName, "/proc/");
+  strcat(fileName, strID);
+  
+  char *ret = malloc(sizeof(fileName) + 1);
+  strcpy(ret, fileName);
+  return ret;
 }
 
 // TODO delete this ffunc
