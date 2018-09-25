@@ -10,6 +10,7 @@
 #define STATE_INDEX 3
 #define UTIME_INDEX 14
 #define STIME_INDEX 15
+#define BASE "/proc/"
 
 int parseStat(Process *p, char *path);
 int parseStatM(Process *p, char *path);
@@ -22,16 +23,16 @@ void freeFields(Process *p);
 
 Process * parseInfo(int pid) {
   // construct base file path for needed files
-  char *base = malloc((sizeof(char) * PID_LENGTH) + sizeof("/proc/"));
+  char *base = malloc((sizeof(char) * PID_LENGTH) + sizeof(BASE));
   char strID[PID_LENGTH + 1];
   sprintf(strID, "%d", pid);
   strcpy(base, "/proc/");
   strcat(base, strID);
 
   // create paths for relevant files
-  char *statPath = malloc(sizeof(base) + sizeof("/stat"));
-  char *statMPath = malloc(sizeof(base) + sizeof("/statm"));
-  char *cmdPath = malloc(sizeof(base) + sizeof("/cmdline"));
+  char *statPath = malloc(sizeof(BASE) + sizeof(PID_LENGTH) + sizeof("/stat") + 1);
+  char *statMPath = malloc(sizeof(BASE) + sizeof(PID_LENGTH) + sizeof("/statm") + 1);
+  char *cmdPath = malloc(sizeof(BASE) +  sizeof(PID_LENGTH) +sizeof("/cmdline") + 1);
 
   strcpy(statPath, base);
   strcpy(statMPath, base);
@@ -43,6 +44,10 @@ Process * parseInfo(int pid) {
 
   // create return struct
   Process *ret = malloc(sizeof(Process));
+    ret->userTime = NULL;
+    ret->sysTime = NULL;
+    ret->cmdLine = NULL;
+    ret->numPages = NULL;
   ret->pid = pid;
 
   // parse needed info
