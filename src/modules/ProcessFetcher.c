@@ -22,6 +22,7 @@ char * buildPath(int pid);
 // }
 
 Process * getProcess(int pid) {
+  //TODO fix this mem leak
   Process *p = malloc(sizeof(struct Process));
   p = parseInfo(pid);
 
@@ -31,56 +32,80 @@ Process * getProcess(int pid) {
 Process * getAllProcesses() {
   // if directory iteration not in progess, open new one
   if (!dirp) {
+    printf("init success\n");
     dirp = opendir("/proc");
   }
   struct dirent *currDirectory = malloc(sizeof(struct dirent));
 
   // read one more file if available
-  if ((currDirectory = readdir(dirp))) {
+  printf("searching for next file\n");
+  while((currDirectory = readdir(dirp))) {
     if (atoi(currDirectory->d_name)) {
-      Process *nextProcess = parseInfo(atoi(currDirectory->d_name));
-      return nextProcess;
+      if(fileOwned(atoi(currDirectory->d_name))) {
+         printf("found next: %s\n", currDirectory->d_name);
+         break;
+      }
     }
   }
 
+  if (currDirectory) {
+    //printf("TEST: %s\n", currDirectory->d_name);
+    Process *p = parseInfo(atoi(currDirectory->d_name));
+    printf("finished parsing %d\n", atoi(currDirectory->d_name));
+    //free(currDirectory);
+    return p;
+  }
+
+  printf("last file found\n");
   return NULL;
 }
 
 int fileOwned(int pid) {
+  printf("checking ownership: %d\n", pid);
   // construct path to status file
   char *path = buildPath(pid);
   char *status = "/status";
   char *statusPath = malloc(sizeof(char) * COPY_BUFFER);
-  statusPath = strcat(path, status);
+  statusPath = strcpy(statusPath, strcat(path, status));
 
   // open file and create container for lines
+  printf("opening file: %s\n", statusPath);
   FILE *fptr = fopen(statusPath, "r");
-  char *line = malloc(sizeof(char) * COPY_BUFFER);
+  //TODO fix this buffer
+  char *line = malloc(sizeof(char) * 1000);
 
   //traverse to line containing owner id
+  printf("traversing to location\n");
   for (int i = 0 ; i < 10; i++) {
-    fgets(line, COPY_BUFFER, fptr);
+    fgets(line, 1000, fptr);
   }
 
   //parse owner id
+  printf("scanning file\n");
   int owner = 0;
   sscanf(line, "%s %d", path, &owner);
 
   // free memory
+  printf("freeing mem\n");
   free(statusPath);
   free(line);
+  free(path);
+  fclose(fptr);
 
+  printf("finished ownership check: %d\n", pid);
   return ((uint) owner) == UID;
 
 }
 
 char * buildPath(int pid) {
+  //TODO figure out if this needs to be freed
   char strID[COPY_BUFFER];
   sprintf(strID, "%d", pid);
   char base[] = "/proc/";
   char *fileName = malloc(sizeof(char) * PATH_LENGTH);
   
   strcpy(fileName, strcat(base, strID));
+  // free(strID);
 
   return fileName;
 }
@@ -92,8 +117,11 @@ int countFiles() {
 
   while ((curr = readdir(d))) {
     if (atoi(curr->d_name)) {
-      printf("%d\n", atoi(curr->d_name));
-      count++;
+      if(fileOwned(atoi(curr->d_name))){
+         printf("%d\n", atoi(curr->d_name));
+         printf("print name\n");
+        count++;
+      }
     }
   }
 

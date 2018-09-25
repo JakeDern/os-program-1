@@ -45,9 +45,13 @@ Process * parseInfo(int pid) {
   ret->pid = pid;
 
   // parse needed info
-  parseCmd(ret, cmdPath);
-  parseStat(ret, statPath);
-  parseStatM(ret, statMPath);
+  if (parseCmd(ret, cmdPath) || parseStat(ret, statPath) || parseStatM(ret, statMPath)) {
+    return NULL;  
+  }
+
+  // parseCmd(ret, cmdPath);
+  // parseStat(ret, statPath);
+  // parseStatM(ret, statMPath);
 
   // free mem
   free(statPath);
@@ -62,7 +66,11 @@ Process * parseInfo(int pid) {
 
 int parseStat(Process *p, char* path) {
   // set up buffer and file
-  FILE *stat = fopen(path, "r");
+  FILE *stat;
+  if ((stat = fopen(path, "r")) == NULL) {
+    return 1;
+  }
+
   char *curr = malloc(sizeof(char) * BIG_NUM);
   char *lineBuff = malloc(sizeof(char) * 1000);
   fgets(lineBuff, 1000, stat);
@@ -100,7 +108,11 @@ int parseStat(Process *p, char* path) {
 
 int parseStatM(Process *p, char* path) {
   // set up buffer and file
-  FILE *statM = fopen(path, "r");
+  FILE *statM;
+  if ((statM = fopen(path, "r")) == NULL) {
+    return 1;
+  }
+
   char *buffer = malloc(sizeof(char) * 1000);
   fgets(buffer, 1000, statM);
   char *size = malloc(sizeof(char) * BIG_NUM);
@@ -121,10 +133,14 @@ int parseStatM(Process *p, char* path) {
 } 
 
 int parseCmd(Process *p, char* path) {
-  FILE *cmd = fopen(path, "r");
+  FILE *cmd;
+  if ((cmd = fopen(path, "r")) == NULL) {
+    return 1;
+  }
+
   char *buffer = malloc(sizeof(char) * 1000);
   char *buffer2 = malloc(sizeof(char) * 1000);
-  printf("buffer size after malloc: %lu\n", sizeof(buffer));
+  // printf("buffer size after malloc: %lu\n", sizeof(buffer));
 
   while(fgets(buffer2, 1000, cmd)) {
     strcat(buffer, buffer2);
@@ -135,7 +151,7 @@ int parseCmd(Process *p, char* path) {
 
   fclose(cmd);
   //free(buffer);
-  printf("buffer size when done: %lu\n", sizeof(buffer));
-  printf("struct cmd size: %lu\n", sizeof(p->cmdLine));
+  // printf("buffer size when done: %lu\n", sizeof(buffer));
+  // printf("struct cmd size: %lu\n", sizeof(p->cmdLine));
   return 0;
 } 

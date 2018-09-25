@@ -17,5 +17,5 @@ typedef struct ProcessNode {
 
 extern Process * getProcess(int pid);
 
-extern Process * getAllProccesses();
+extern Process * getAllProcesses();
 #endif
