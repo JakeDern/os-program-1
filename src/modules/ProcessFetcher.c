@@ -75,7 +75,8 @@ int fileOwned(int pid) {
   FILE *fptr;
 
   if ((fptr = fopen(statusPath, "r")) == NULL) {
-    return NULL;
+    free(fptr);
+    return 0;
   }
   //TODO fix this buffer
   char *line = malloc(sizeof(char) * 1000);
