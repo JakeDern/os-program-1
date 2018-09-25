@@ -28,8 +28,9 @@ int main(int argc, char **argv) {
 }
 
 void freeProcess(Process *p) {
-  free(p->sysTime);
   free(p->userTime);
+  free(p->sysTime);
+  // free(p->numPages);
   free(p->cmdLine);
   free(p);
 }
