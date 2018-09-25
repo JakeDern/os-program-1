@@ -23,8 +23,7 @@ char * buildPath(int pid);
 
 Process * getProcess(int pid) {
   //TODO fix this mem leak
-  Process *p = malloc(sizeof(struct Process));
-  p = parseInfo(pid);
+  Process *p = parseInfo(pid);
 
   return p;
 }
@@ -56,6 +55,7 @@ Process * getAllProcesses() {
     } 
     printf("finished parsing %d\n", atoi(currDirectory->d_name));
     //free(currDirectory);
+    closedir(dirp);
     return p;
   }
 
