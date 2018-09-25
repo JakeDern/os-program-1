@@ -79,8 +79,9 @@ int parseStat(Process *p, char* path) {
     return 1;
   }
 
-  char *curr = malloc(sizeof(char) * BIG_NUM);
-  char *lineBuff = malloc(sizeof(char) * 1000);
+  //TODO make this a constant
+  char *curr = malloc(50);
+  char *lineBuff = malloc(sizeof(char) * 1000 + 1);
   fgets(lineBuff, 1000, stat);
 
   // traverse file, pulling out relevant information
@@ -94,12 +95,12 @@ int parseStat(Process *p, char* path) {
         break;
       }
       case UTIME_INDEX: {
-        p->userTime = malloc(BIG_NUM);
+        p->userTime = malloc(BIG_NUM + 1);
         strcpy(p->userTime, curr);
         break;
       }
       case STIME_INDEX: {
-        p->sysTime = malloc(BIG_NUM);
+        p->sysTime = malloc(BIG_NUM + 1);
         strcpy(p->sysTime, curr);
         break;
       }
