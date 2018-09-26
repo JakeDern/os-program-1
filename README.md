@@ -3,7 +3,8 @@ This program prints information about one or more running processes
 on the current system, depending on the command line arguments specified
 
 # Usage
-```$./537ps -p <pid> | -s(-) | -S(-) | -v(-) | -U(-) | -c(-)
+```
+$./537ps -p <pid> | -s(-) | -S(-) | -v(-) | -U(-) | -c(-)
 ```
 
 If a -p flag is present and no pid is specified, the program will print
