@@ -158,6 +158,7 @@ int parseCmd(Process *p, char* path) {
   
   p->cmdLine = calloc(1, 3000);
   strcpy(p->cmdLine, buffer);
+  // hacky fixes bug for some reason
   memset(buffer, 0, 3000);
   memset(buffer2, 0, 1000);
 
