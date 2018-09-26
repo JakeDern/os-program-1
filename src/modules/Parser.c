@@ -51,7 +51,7 @@ Process * parseInfo(int pid) {
     ret->pid = pid;
 
   // parse needed info
-  if (parseCmd(ret, cmdPath) || parseStat(ret, statPath) || parseStatM(ret, statMPath)) {
+  if ( parseStat(ret, statPath) || parseCmd(ret, cmdPath) || parseStatM(ret, statMPath)) {
     printf("PARSING FAILED: %d\n", pid);
     freeFields(ret);
     return NULL;  
@@ -156,8 +156,10 @@ int parseCmd(Process *p, char* path) {
     strcat(buffer, buffer2);
   }
   
-  p->cmdLine = malloc(sizeof(char) * 3000);
+  p->cmdLine = calloc(1, 3000);
   strcpy(p->cmdLine, buffer);
+  memset(buffer, 0, 3000);
+  memset(buffer2, 0, 1000);
 
   fclose(cmd);
   // free(buffer);

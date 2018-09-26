@@ -70,6 +70,7 @@ void printProcess(Options *opts, Process *p) {
     printf("[ %s ] ", p->cmdLine);
   }
   printf("\n");
+  fflush(stdout);
 }
 
 void printAllprocesses(Options *opts) {
