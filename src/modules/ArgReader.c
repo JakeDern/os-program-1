@@ -20,18 +20,10 @@
 
 char* errMsg;
 
-// int main(int argc, char **argv) {
-
-// getOpts(argc, argv);
-
-
-// return 0;
-
-// }
-
+/** @override */ 
 Options * getOpts(int argc, char **argv) {
 
-
+  //expected args is to check for gibberish arguments
   int expectedArgs = 0;
   char command;
 
@@ -43,21 +35,18 @@ Options * getOpts(int argc, char **argv) {
     opts->vFlag = -1;
     opts->cFlag = -1;
 
-
-
-
   while ((command = getopt(argc, argv, "p:s::U::S::v::c::")) != -1) {
     expectedArgs++;
     switch (command) {
       case 'p': {
-        if (opts->pFlag == -1) {
-          if (atoi(optarg)) {
+        if (opts->pFlag == -1) { // check if this is the first time the -p flag has come up
+          if (atoi(optarg)) { // check if the -p arg is a number
             opts->pFlag = atoi(optarg);
-            if (opts->pFlag < 0) {
+            if (opts->pFlag < 0) { // check if the pid given is less than 0
               errMsg = BAD_PID_INPUT_ERROR;
               return NULL;
             }
-          } else if (*optarg == '0') {
+          } else if (*optarg == '0') { // special case because 0 returns false in above if statement but is a valid pid
             opts->pFlag = 0;
           } else {
             errMsg = BAD_PID_INPUT_ERROR; 
@@ -67,6 +56,13 @@ Options * getOpts(int argc, char **argv) {
        }
        break;
       }
+	/*
+	 *the rest of logic for the argreader goes as follows
+	 *check for a duplicate argument
+	 *check for a '-' following the command to disable the command
+	 *make sure there is no bad input after the command
+	 *mark the flag in the struct as a 1 or a 0 depending on input command (used to print certain info)
+	 */
       case 's': {
         if (opts->sFlag == -1) {
            if (optarg) {
@@ -179,7 +175,6 @@ Options * getOpts(int argc, char **argv) {
              }
            }
            else {
-             //-s case
              opts->cFlag = 1;
            }
         }
@@ -191,21 +186,23 @@ Options * getOpts(int argc, char **argv) {
         break;
       }
       case '?': {
-        printf("case ?\n");
         errMsg = USAGE_ERROR;
         return NULL;
       }
       default: {
+	//should never be reached
         return NULL;
       }
     }
   }
 
+  // verify there were not any nonsensical arguments in the cmd line
   if (expectedArgs + 1 != argc) {
     errMsg = COMMAND_FORMAT_ERROR;
     return NULL;
   }
 
+  // set all untouched flags to the default per program specs
   if(opts->sFlag == -1) opts->sFlag = DEFUALT_sFLAG;
   if(opts->UFlag == -1) opts->UFlag = DEFUALT_UFLAG;
   if(opts->SFlag == -1) opts->SFlag = DEFAULT_SFLAG;
