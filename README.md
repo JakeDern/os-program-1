@@ -17,6 +17,20 @@ An error will be printed and the program will terminate without printing informa
 3. Improper pid - valid pids are positive natural numbers below 32768
 4. Providing an argument to a flag which does not accept arguments
 
+#Compilation
+1. First switch into /src/
+```
+$ cd ./src
+```
+2. Invoke the make file to create an executable, if not present
+```
+$ make
+```
+3. Run the executable as specified above in the usage section
+```
+$./537ps -p <pid> | -s(-) | -S(-) | -v(-) | -U(-) | -c(-)
+```
+
 # Architecture
 The code is divided into three modules listed below, which are pulled together and used by the main.c file.
 
@@ -27,3 +41,10 @@ The code is divided into three modules listed below, which are pulled together a
 3. ProcessFetcher: This module is responsible for iterating over the /proc/ directory, determining ownership of files, and returning information about any owned processes to the main program. It's methods generally return pointers to Process structs or NULL on failure.
 
 4. Parser: This module is responsible for the actual construction of Process structs and for parsing all needed information about the Processes from any relevant files. It is primarily used by the ProcessFetcher, and generally returns Process structs or NULL on failure. 
+
+# File Structure
+At the root level, you will find the CODEOWNERS and this README. The makefile and main.c are found in /src/, which is further divided into two files.
+
+/src/headers: Contains .h files specifying the interfaces for the 3 modules described above
+
+/src/modules: Contains.h file with the source code and implementation of the 3 modules as described above. 
