@@ -10,17 +10,17 @@
 #define STATE_INDEX 3
 #define UTIME_INDEX 14
 #define STIME_INDEX 15
+#define FILE_BUFFER 1000
+#define COPY_BUF 50
 #define BASE "/proc/"
+
 
 int parseStat(Process *p, char *path);
 int parseStatM(Process *p, char *path);
 int parseCmd(Process *p, char *path);
 void freeFields(Process *p);
 
-// int main(int argc, char **argv) {
-//   parseInfo(4215);
-// }
-
+/** @override */
 Process * parseInfo(int pid) {
   // construct base file path for needed files
   char *base = malloc((sizeof(char) * PID_LENGTH) + sizeof(BASE));
@@ -57,21 +57,25 @@ Process * parseInfo(int pid) {
     return NULL;  
   }
 
-  // parseCmd(ret, cmdPath);
-  // parseStat(ret, statPath);
-  // parseStatM(ret, statMPath);
-
   // free mem
   free(statPath);
   free(statMPath);
   free(cmdPath);
   free(base);
 
-  // printf("command line: %s\n", ret->cmdLine);
-
   return ret;
 }
 
+/**
+ * Parses state, usertime, and system time
+ * information about a process from the stat
+ * file in the /proc/pid directory, and puts this
+ * information directly into the provided struct
+ * 
+ * @param path path to the relevant stat file
+ * @param p the process to store the information in
+ * @returns 0 iff successful, 1 otherwise
+ **/
 int parseStat(Process *p, char* path) {
   // set up buffer and file
   FILE *stat;
@@ -80,9 +84,9 @@ int parseStat(Process *p, char* path) {
   }
 
   //TODO make this a constant
-  char *curr = malloc(50);
-  char *lineBuff = malloc(sizeof(char) * 1000 + 1);
-  fgets(lineBuff, 1000, stat);
+  char *curr = malloc(COPY_BUF);
+  char *lineBuff = malloc(FILE_BUFFER + 1);
+  fgets(lineBuff, FILE_BUFFER, stat);
 
   // traverse file, pulling out relevant information
   char *currPos = lineBuff;
@@ -115,6 +119,16 @@ int parseStat(Process *p, char* path) {
   return 0;
 } 
 
+/**
+ * Parses memory usage information in pages
+ * about a process from the statM
+ * file in the /proc/pid directory, and puts this
+ * information directly into the provided struct
+ * 
+ * @param path path to the relevant statM file
+ * @param p the process to store the information in
+ * @returns 0 iff successful, 1 otherwise
+ **/
 int parseStatM(Process *p, char* path) {
   // set up buffer and file
   FILE *statM;
@@ -122,8 +136,9 @@ int parseStatM(Process *p, char* path) {
     return 1;
   }
 
-  char *buffer = malloc(1000);
-  fgets(buffer, 1000, statM);
+  // setup buffers for file reading
+  char *buffer = malloc(FILE_BUFFER);
+  fgets(buffer, FILE_BUFFER, statM);
   char *size = malloc(BIG_NUM + 1);
 
   // scan first line from file
@@ -141,35 +156,48 @@ int parseStatM(Process *p, char* path) {
   return 0;
 } 
 
+/**
+ * Parses about the command line command that
+ * started this process from the cmdline
+ * file in the /proc/pid directory, and puts this
+ * information directly into the provided struct
+ * 
+ * @param path path to the relevant cmdline file
+ * @param p the process to store the information in
+ * @returns 0 iff successful, 1 otherwise
+ **/
 int parseCmd(Process *p, char* path) {
   FILE *cmd;
   if ((cmd = fopen(path, "r")) == NULL) {
     return 1;
   }
 
-  //TODO fix these to use constants
-  char buffer[3000];
-  char buffer2[1000];
-  // printf("buffer size after malloc: %lu\n", sizeof(buffer));
+  // buffers for reading sections of cmdline
+  // storing/concatenating all sections
+  char buffer[FILE_BUFFER * 3];
+  char buffer2[FILE_BUFFER];
 
-  while((fgets(buffer2, 1000, cmd)) != NULL) {
+  // copy contents of cmdline
+  while((fgets(buffer2, FILE_BUFFER, cmd)) != NULL) {
     strcat(buffer, buffer2);
   }
   
-  p->cmdLine = calloc(1, 3000);
+  // copy cmdline into the struct 
+  p->cmdLine = calloc(1, FILE_BUFFER * 3);
   strcpy(p->cmdLine, buffer);
-  // hacky fixes bug for some reason
-  memset(buffer, 0, 3000);
-  memset(buffer2, 0, 1000);
 
+  // hacky fixes bug for some reason
+  memset(buffer, 0, FILE_BUFFER * 3);
+  memset(buffer2, 0, FILE_BUFFER);
+
+  // close resources
   fclose(cmd);
-  // free(buffer);
-  // free(buffer2);
-  // printf("buffer size when done: %lu\n", sizeof(buffer));
-  // printf("struct cmd size: %lu\n", sizeof(p->cmdLine));
   return 0;
 } 
 
+/**
+ * Frees all memory associated with a Process struct
+ **/
 void freeFields(Process *p) {
   if(p->userTime) {
     free(p->userTime);
