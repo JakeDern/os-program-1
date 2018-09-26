@@ -11,12 +11,14 @@ void printProcess(Options *opts, Process *p);
 void printAllprocesses(Options *opts);
 
 int main(int argc, char **argv) {
+  // fetch options
   Options *opts;
   if ((opts = getOpts(argc, argv)) == NULL) {
     printf("%s\n", errMsg);
     exit(1);
   }
 
+  // attempt to parse information about desired process(es)
   Process *p;
   if (opts->pFlag > -1) {
     if ((p = getProcess(opts->pFlag))) {
@@ -28,30 +30,17 @@ int main(int argc, char **argv) {
   } else {
     printAllprocesses(opts);
   }
+  
+  return 0;
 }
 
-  
-  
-  // if(p = getProcess(4215)) {
-  //   printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
-  //   p->pid, p->state, p->sysTime, p->userTime, p->numPages);
-  //   freeProcess(p);
-  // }
-
-  // while((p = getAllProcesses())) {
-  //   printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
-  //   p->pid, p->state, p->sysTime, p->userTime, p->numPages);
-  //   freeProcess(p);
-  // }
-    // printf("pid: %d, state: %c sysTime: %s userTime: %s numPages: %s\n", 
-    // p->pid, p->state, p->sysTime, p->userTime, p->numPages);
-  // printf("cmd: %s\n", p->cmdLine);
-  // printf("state: %c\n", p->state);
-  // printf("sysTime: %s\n", p->sysTime);
-  // printf("userTime: %s\n", p->userTime);
-  // printf("numPages: %s\n", p->numPages);
-
-
+/**
+ * Prints information about the provided process according
+ * to the options specified. 
+ * 
+ * @param p the process to print information about
+ * @param opts options indicating desired information
+ **/
 void printProcess(Options *opts, Process *p) {
   printf("%d: ", p->pid);
   if (opts->sFlag) {
@@ -73,6 +62,12 @@ void printProcess(Options *opts, Process *p) {
   fflush(stdout);
 }
 
+/**
+ * Prints information about all owned processes with
+ * format according to provided options
+ * 
+ * @param opts indicating desired information
+ **/
 void printAllprocesses(Options *opts) {
   Process *p;
   while((p = getAllProcesses())) {
@@ -81,10 +76,14 @@ void printAllprocesses(Options *opts) {
   }
 }
 
+/**
+ * Frees all memory associated with a process
+ * 
+ * @param p the process to free
+ **/
 void freeProcess(Process *p) {
   free(p->userTime);
   free(p->sysTime);
-  //free(p->numPages);
   free(p->cmdLine);
   free(p);
 }
