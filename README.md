@@ -17,7 +17,7 @@ An error will be printed and the program will terminate without printing informa
 3. Improper pid - valid pids are positive natural numbers below 32768
 4. Providing an argument to a flag which does not accept arguments
 
-#Compilation
+# Compilation
 1. First switch into /src/
 ```
 $ cd ./src
