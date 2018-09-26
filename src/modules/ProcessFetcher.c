@@ -7,24 +7,28 @@
 #include <string.h>
 #include <strings.h>
 
-#define UID getuid()
-#define COPY_BUFFER 50
-#define PATH_LENGTH 15
-#define PID_LENGTH 6
-#define READ_BUFFER 1000
-static DIR *dirp = NULL;
+#define UID getuid()    // current users UID
+#define COPY_BUFFER 50  // buffer for copying strings
+#define PATH_LENGTH 15  // max file path length for /proc/<pid>
+#define PID_LENGTH 6    // max size of a string for a pid
+#define READ_BUFFER 1000// read buffer for reading from a file
+
+static DIR *dirp = NULL;//holds state for traversing directory
 
 int countFiles();
 int fileOwned(int pid);
 char * buildPath(int pid);
 
+/** @override */
 Process * getProcess(int pid) {
+  // check ownership and return process if owned
   if (fileOwned(pid)) {
     return parseInfo(pid);
   }
   return NULL;
 }
 
+/** @override */
 Process * getAllProcesses() {
   // if directory iteration not in progess, open new one
   if (!dirp) {
@@ -41,6 +45,7 @@ Process * getAllProcesses() {
     }
   }
 
+  // verify a file was found and return corresponding process
   if (currDirectory) {
     Process *p = parseInfo(atoi(currDirectory->d_name));
     if (!p) {
@@ -49,10 +54,19 @@ Process * getAllProcesses() {
     return p;
   }
 
+  // if the code made it here, the directory is done being
+  // explored. Close resources and return NULL
   closedir(dirp);
   return NULL;
 }
 
+/**
+ * Determines if a the file located at /proc/<pid>
+ * is owned by the user running this process.
+ * 
+ * @param pid pid of the process to check
+ * @return 1 iff the file is owned, 0 otherwise
+ **/
 int fileOwned(int pid) {
   // construct path to status file
   char *path = buildPath(pid);
@@ -66,9 +80,9 @@ int fileOwned(int pid) {
     free(fptr);
     return 0;
   }
-  char *line = malloc(READ_BUFFER);
 
   // traverse to line containing owner id
+  char *line = malloc(READ_BUFFER);
   for (int i = 0 ; i < 10; i++) {
     fgets(line, 1000, fptr);
   }
@@ -84,19 +98,26 @@ int fileOwned(int pid) {
   fclose(fptr);
 
   return ((uint) owner) == UID;
-
 }
 
+/**
+ * Constructs a path to the directory containing info
+ * for the process with the specified pid. 
+ * 
+ * @param pid pid of the desired process
+ * @return pointer to char array containing directory name
+ **/
 char * buildPath(int pid) {
-  //TODO figure out if this needs to be freed
+  // parse the pid into a string
   char strID[PID_LENGTH];
   sprintf(strID, "%d", pid);
   char fileName[COPY_BUFFER];
 
+  // construct the file path /proc/<pid>
   strcpy(fileName, "/proc/");
   strcat(fileName, strID);
-  
   char *ret = malloc(sizeof(fileName) + 1);
   strcpy(ret, fileName);
+
   return ret;
 }
