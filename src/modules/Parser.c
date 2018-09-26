@@ -5,16 +5,16 @@
 #include <strings.h>
 #include <stdio.h>
 
-#define PID_LENGTH 5
-#define BIG_NUM 15
-#define STATE_INDEX 3
-#define UTIME_INDEX 14
-#define STIME_INDEX 15
-#define FILE_BUFFER 1000
-#define COPY_BUF 50
-#define BASE "/proc/"
+#define PID_LENGTH 5    // length of a pid
+#define BIG_NUM 15      // max expected number length
+#define STATE_INDEX 3   // index of state info in stat
+#define UTIME_INDEX 14  // index of usertime info in stat
+#define STIME_INDEX 15  // index of systime info in stat
+#define FILE_BUFFER 1000// buffer for copying from files
+#define COPY_BUF 50     // buffer for copying between strings
+#define BASE "/proc/"   // base of all needed file paths
 
-
+// forward declarations
 int parseStat(Process *p, char *path);
 int parseStatM(Process *p, char *path);
 int parseCmd(Process *p, char *path);
