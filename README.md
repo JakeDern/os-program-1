@@ -47,4 +47,4 @@ At the root level, you will find the CODEOWNERS and this README. The makefile an
 
 /src/headers: Contains .h files specifying the interfaces for the 3 modules described above
 
-/src/modules: Contains.h file with the source code and implementation of the 3 modules as described above. 
+/src/modules: Contains .c file with the source code and implementation of the 3 modules as described above. 
