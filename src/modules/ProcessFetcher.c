@@ -1,3 +1,8 @@
+/**
+ * @author Jake Dern
+ * @author Alex Dallman
+ **/
+
 #include "../headers/ProcessFetcher.h"
 #include "../headers/Parser.h"
 #include <stdlib.h>

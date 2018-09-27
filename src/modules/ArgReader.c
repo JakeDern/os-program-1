@@ -1,3 +1,8 @@
+/**
+ * @author Jake Dern
+ * @author Alex Dallman
+ **/
+
 #include "../headers/ArgReader.h"
 #include <stdlib.h>
 #include <string.h>

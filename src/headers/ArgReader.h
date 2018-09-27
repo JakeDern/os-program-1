@@ -1,3 +1,8 @@
+/**
+ * @author Jake Dern
+ * @author Alex Dallman
+ **/
+
 #ifndef _ARGREADER
 #define _ARGREADER
 
