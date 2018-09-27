@@ -43,7 +43,7 @@ The code is divided into three modules listed below, which are pulled together a
 4. Parser: This module is responsible for the actual construction of Process structs and for parsing all needed information about the Processes from any relevant files. It is primarily used by the ProcessFetcher, and generally returns Process structs or NULL on failure. 
 
 # File Structure
-At the root level, you will find the CODEOWNERS and this README. The makefile and main.c are found in /src/, which is further divided into two directories.
+At the root level, you will find the CODEOWNERS, this README, and a readme.txt (for use without markdown). The makefile and main.c are found in /src/, which is further divided into two directories.
 
 /src/headers: Contains .h files specifying the interfaces for the 3 modules described above
 
