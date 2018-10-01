@@ -59,6 +59,12 @@ Process * parseInfo(int pid) {
   if ( parseStat(ret, statPath) || parseCmd(ret, cmdPath) || parseStatM(ret, statMPath)) {
     printf("PARSING FAILED: %d\n", pid);
     freeFields(ret);
+
+    free(statPath);
+    free(statMPath);
+    free(cmdPath);
+    free(base);
+    
     return NULL;  
   }
 
