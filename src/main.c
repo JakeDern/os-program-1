@@ -36,6 +36,10 @@ int main(int argc, char **argv) {
     printAllprocesses(opts);
   }
   
+  if(opts) {
+    free(opts);
+  }
+
   return 0;
 }
 
