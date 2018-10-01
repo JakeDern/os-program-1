@@ -150,7 +150,7 @@ int parseStatM(Process *p, char* path) {
   sscanf(buffer, "%s", size);
 
   // record size
-  p->numPages = malloc(sizeof(size));
+  p->numPages = malloc(BIG_NUM + 1);
   p->numPages = strcpy(p->numPages, size);
 
   // free mem and close resources
