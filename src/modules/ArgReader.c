@@ -45,16 +45,18 @@ Options * getOpts(int argc, char **argv) {
     switch (command) {
       case 'p': {
         if (opts->pFlag == -1) { // check if this is the first time the -p flag has come up
-          if (atoi(optarg)) { // check if the -p arg is a number
+          if (optarg != NULL && atoi(optarg)) { // check if the -p arg is a number
             opts->pFlag = atoi(optarg);
             if (opts->pFlag < 0) { // check if the pid given is less than 0
               errMsg = BAD_PID_INPUT_ERROR;
+              free(opts);
               return NULL;
             }
-          } else if (*optarg == '0') { // special case because 0 returns false in above if statement but is a valid pid
+          } else if (optarg != NULL && *optarg == '0') { // special case because 0 returns false in above if statement but is a valid pid
             opts->pFlag = 0;
           } else {
-            errMsg = BAD_PID_INPUT_ERROR; 
+            errMsg = BAD_PID_INPUT_ERROR;
+            free(opts);
             return NULL;
           }
           expectedArgs++;
@@ -78,6 +80,7 @@ Options * getOpts(int argc, char **argv) {
              else {
                //gibberish arg
                errMsg = USAGE_ERROR;
+               free(opts);
                return NULL;
              }
            }
@@ -89,6 +92,7 @@ Options * getOpts(int argc, char **argv) {
         else {
           //duplicate flag error
           errMsg = DUPLICATE_FLAG_ERROR;
+          free(opts);
           return NULL;
         }
         break;
@@ -102,6 +106,7 @@ Options * getOpts(int argc, char **argv) {
              }
              else {
                errMsg = USAGE_ERROR;
+               free(opts);
                return NULL;
              }
            }
@@ -112,6 +117,7 @@ Options * getOpts(int argc, char **argv) {
         }
         else {
           errMsg = DUPLICATE_FLAG_ERROR;
+          free(opts);
           return NULL;
           //duplicate flag error
         }
@@ -127,6 +133,7 @@ Options * getOpts(int argc, char **argv) {
              else {
                //gibberish arg
                errMsg = USAGE_ERROR;
+               free(opts);
                return NULL;
              }
            }
@@ -151,6 +158,7 @@ Options * getOpts(int argc, char **argv) {
              else {
                //gibberish arg
                errMsg = USAGE_ERROR;
+               free(opts);
                return NULL;
              }
            }
@@ -161,6 +169,7 @@ Options * getOpts(int argc, char **argv) {
         }
         else {
           errMsg = DUPLICATE_FLAG_ERROR;
+          free(opts);
           return NULL;
           //duplicate flag error
         }
@@ -176,6 +185,7 @@ Options * getOpts(int argc, char **argv) {
              else {
                //gibberish arg
                errMsg = USAGE_ERROR;
+               free(opts);
                return NULL;
              }
            }
@@ -186,16 +196,19 @@ Options * getOpts(int argc, char **argv) {
         else {
           //duplicate flag error
           errMsg = DUPLICATE_FLAG_ERROR;
+          free(opts);
           return NULL;
         }
         break;
       }
       case '?': {
         errMsg = USAGE_ERROR;
+        free(opts);
         return NULL;
       }
       default: {
 	//should never be reached
+        free(opts);
         return NULL;
       }
     }
@@ -204,6 +217,7 @@ Options * getOpts(int argc, char **argv) {
   // verify there were not any nonsensical arguments in the cmd line
   if (expectedArgs + 1 != argc) {
     errMsg = COMMAND_FORMAT_ERROR;
+    free(opts);
     return NULL;
   }
 

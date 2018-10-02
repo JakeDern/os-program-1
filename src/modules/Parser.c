@@ -59,6 +59,12 @@ Process * parseInfo(int pid) {
   if ( parseStat(ret, statPath) || parseCmd(ret, cmdPath) || parseStatM(ret, statMPath)) {
     printf("PARSING FAILED: %d\n", pid);
     freeFields(ret);
+
+    free(statPath);
+    free(statMPath);
+    free(cmdPath);
+    free(base);
+
     return NULL;  
   }
 
@@ -150,7 +156,7 @@ int parseStatM(Process *p, char* path) {
   sscanf(buffer, "%s", size);
 
   // record size
-  p->numPages = malloc(sizeof(size));
+  p->numPages = malloc(BIG_NUM + 1);
   p->numPages = strcpy(p->numPages, size);
 
   // free mem and close resources
