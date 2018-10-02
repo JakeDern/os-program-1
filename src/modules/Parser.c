@@ -64,7 +64,7 @@ Process * parseInfo(int pid) {
     free(statMPath);
     free(cmdPath);
     free(base);
-    
+
     return NULL;  
   }
 

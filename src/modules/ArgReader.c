@@ -45,14 +45,14 @@ Options * getOpts(int argc, char **argv) {
     switch (command) {
       case 'p': {
         if (opts->pFlag == -1) { // check if this is the first time the -p flag has come up
-          if (atoi(optarg)) { // check if the -p arg is a number
+          if (optarg != NULL && atoi(optarg)) { // check if the -p arg is a number
             opts->pFlag = atoi(optarg);
             if (opts->pFlag < 0) { // check if the pid given is less than 0
               errMsg = BAD_PID_INPUT_ERROR;
               free(opts);
               return NULL;
             }
-          } else if (*optarg == '0') { // special case because 0 returns false in above if statement but is a valid pid
+          } else if (optarg != NULL && *optarg == '0') { // special case because 0 returns false in above if statement but is a valid pid
             opts->pFlag = 0;
           } else {
             errMsg = BAD_PID_INPUT_ERROR;
